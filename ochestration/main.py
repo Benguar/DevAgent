@@ -1,16 +1,13 @@
 from typing import TypedDict, Annotated
-from langchain_core.tools import tool
 from langgraph.graph import StateGraph,START,END
 from langchain_ollama import ChatOllama
 from langgraph.graph.message import add_messages
 from datetime import datetime, timezone
-from langgraph.prebuilt import ToolNode, tools_condition
-# from langgraph.checkpoint.sqlite import SqliteSaver
-import time
+from langgraph.prebuilt import ToolNode
 from langchain.chat_models import init_chat_model
 from database.conn import Session
 from database.models import DevAgentTable
-from sqlalchemy import insert,select
+from sqlalchemy import select
 from fastembed import TextEmbedding
 from core.settings import settings
 model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
@@ -18,7 +15,6 @@ model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
 class GraphState(TypedDict):
     messages: Annotated[list, add_messages]
 def check_similarity(prompt):
-    t= time.time()
     embedding_list = list(model.embed(prompt))
     embedding_vector = embedding_list[0]
     embedding = embedding_vector.tolist()
@@ -40,7 +36,6 @@ def chatbot(state: GraphState):
     result = llm.invoke(state["messages"])
     return {"messages": result}
 
-# chatbot({'messages': 'are you active'})
 
 builder = StateGraph(GraphState)
 

@@ -1,5 +1,4 @@
 import pymupdf4llm
-import time
 import json
 from ochestration.main import llm
 from fastembed import TextEmbedding
@@ -35,27 +34,24 @@ OUTPUT SCHEMA:
     }
   ]
 }"""}]
-def add_chunks():
-    path = './pdf/rag_test_document.pdf'
-    t = time.time()
+def add_chunks(path: str):
     pdf = pymupdf4llm.to_markdown(path)
     initial_message.append({"role":"user","content": pdf})
-    # print(initial_message)
     result =llm.invoke(initial_message)
-    print(f'{result} \n')
+    print(f'llm chunks: \n\n {result} \n')
     result = result.content
     data = json.loads(result[0]['text'])
     print(type(json.loads(result[0]['text']))) 
-    # print(f'{time.time()-t}')
     for index in data['document_analysis']:
         for key,value in index.items():
             content = f'topic: {key}, content: {value}'
-            print(f'{content}\n\n')
+            print(f'\n{content}\n')
             embedding_list = list(model.embed(content))
             embedding_vector = embedding_list[0]
             embedding = embedding_vector.tolist()
+            print(f'vector: \n\n {embedding}')
             with Session() as db:
                 db.execute(insert(DevAgentTable).values(content=value,title=key,source='pdf',vector= embedding))
                 db.commit()
-    print(f'{time.time() - t}')
-add_chunks()
+user = input(f'input file path of document: ')
+add_chunks(user)

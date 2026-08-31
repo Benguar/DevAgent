@@ -29,8 +29,7 @@ OUTPUT SCHEMA:
 {
   "document_analysis": [
     {
-      "topic": "Brief description of the topic",
-      "text_chunk": "The exact, unaltered text block associated with this topic"
+      "topic": "text_chunk"
     }
   ]
 }"""}]

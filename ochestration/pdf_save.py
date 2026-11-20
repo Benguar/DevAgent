@@ -39,8 +39,13 @@ def add_chunks(path: str):
     result =llm.invoke(initial_message)
     print(f'llm chunks: \n\n {result} \n')
     result = result.content
-    data = json.loads(result[0]['text'])
-    print(type(json.loads(result[0]['text']))) 
+
+    #this is for gemini tools 
+    # data = json.loads(result[0]['text'])
+    # print(type(json.loads(result[0]['text']))) 
+    data = json.loads(result)
+    # print('\n\n')
+    # print(type(data))
     for index in data['document_analysis']:
         for key,value in index.items():
             content = f'topic: {key}, content: {value}'

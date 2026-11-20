@@ -10,6 +10,7 @@ from database.models import DevAgentTable
 from sqlalchemy import select
 from fastembed import TextEmbedding
 from core.settings import settings
+from langchain_groq import ChatGroq
 model = TextEmbedding(model_name="BAAI/bge-small-en-v1.5")
 
 class GraphState(TypedDict):
@@ -29,7 +30,9 @@ def check_similarity(prompt):
     else:
         output = ""
     return output
-llm = init_chat_model("google_genai:gemini-3.1-flash-lite",api_key = settings.GEMINI_API_KEY)
+# llm = init_chat_model("gemini-2.5-flash",model_provider="google_genai",api_key=settings.GEMINI_API_KEY)
+llm = ChatGroq(model="openai/gpt-oss-120b", api_key= settings.GROQ_API_KEY)
+# llm = init_chat_model()
 # llm = ChatOllama(model="llama3.2", temperature=0)
 
 def chatbot(state: GraphState):

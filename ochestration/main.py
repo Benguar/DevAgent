@@ -67,4 +67,4 @@ if __name__ == "__main__":
         </Database Context>"""}]
         initial_message.append({"role":"user","content": user_input})
         graph_output = graph.invoke({"messages": initial_message})
-        print(f'assistant:   {graph_output["messages"][-1].content[0]['text']}')
+        print(f'assistant:   {graph_output["messages"][-1].content}')
